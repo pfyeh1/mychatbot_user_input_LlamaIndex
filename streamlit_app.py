@@ -25,7 +25,7 @@ def load_data():
 pdf_file = st.file_uploader('Choose your .pdf file', type="pdf")
 
 
-if pdf_file not None:
+if pdf_file is not None:
     st.write("Uploaded Filename: ", file.name)
 
     # load data
