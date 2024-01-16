@@ -39,7 +39,7 @@ if pdf_file is not None:
     st.write(text[:100])
     
     # load data
-    if st.button('Load data: '):
+    if st.button('Load data: ', type = "primary"):
         index = load_data()
     
         st.header('Ask your data')
