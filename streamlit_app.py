@@ -55,10 +55,17 @@ def chat(index):
 
 def main():
     
+    index = None
+    
     # upload pdf file
     pdf_file = st.file_uploader('Choose your .pdf file', type="pdf")
 
-
+    # initialize session
+    if "messages" not in st.session_state.keys(): # Initialize the chat message history
+        st.session_state.messages = [
+        {"role": "assistant", "content": "Ask me a question about your pdf!"}
+        ]    
+            
     if pdf_file is not None:
         st.write("Uploaded Filename: ", pdf_file.name)
     
@@ -66,19 +73,15 @@ def main():
         st.write("*PDF content extracted*...")
         st.write(text[:100])
     
-        # initialize session
-        if "messages" not in st.session_state.keys(): # Initialize the chat message history
-            st.session_state.messages = [
-            {"role": "assistant", "content": "Ask me a question!"}
-            ]    
+
             
-            index = load_data(text=text)
+        index = load_data(text=text)
             
-            try:
-                index = load_data(text = text)
-                chat(index)
-            except:
-                st.warning("Uh oh! Something went wrong!")
+        try:
+            index = load_data(text = text)
+            chat(index)
+        except:
+            st.warning("Uh oh! Something went wrong!")
 
 if __name__ == "main__":
     main()
