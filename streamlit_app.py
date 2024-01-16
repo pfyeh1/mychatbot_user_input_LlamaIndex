@@ -4,10 +4,10 @@ from llama_index.llms import OpenAI
 import openai
 from pypdf import PdfReader
 
-st.title('🎈 huh?')
+st.title("Chat with your uploaded file 🖐️ 💬 📚)
 
 openai.api_key = st.secrets.openai_key
-st.header("Chat with your uploaded file 💬 📚")
+#st.header("Chat with your uploaded file 🖐️ 💬 📚")
 
 def get_pdf_text(pdf_file):
     text = ""
@@ -53,8 +53,6 @@ def chat(index):
                 message = {"role": "assistant", "content": response.response}
                 st.session_state.messages.append(message) # Add response to message history 
 
-
-    
 # upload pdf file
 pdf_file = st.file_uploader('Choose your .pdf file', type="pdf")
 
