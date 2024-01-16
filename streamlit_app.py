@@ -4,7 +4,7 @@ from llama_index.llms import OpenAI
 import openai
 from pypdf import PdfReader
 
-st.title("Chat with your uploaded file 🖐️ 💬 📚)
+st.title("Chat with your uploaded file 🖐️ 💬 📚")
 
 openai.api_key = st.secrets.openai_key
 #st.header("Chat with your uploaded file 🖐️ 💬 📚")
