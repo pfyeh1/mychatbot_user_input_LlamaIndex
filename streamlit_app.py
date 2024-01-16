@@ -17,9 +17,9 @@ def get_pdf_text(pdf_file):
     return text
 
 @st.cache_resource(show_spinner = False)
-def load_data():
+def load_data(text):
     with st.spinner(text = "Loading and indexing docs"):
-        documents = Document(text)
+        documents = Document(text = text)
         service_context = ServiceContext.from_defaults(llm = OpenAI(
                                                             model = "gpt-3.5-turbo",
                                                             temperature = .5,
@@ -35,11 +35,17 @@ if pdf_file is not None:
     st.write("Uploaded Filename: ", pdf_file.name)
     
     text = get_pdf_text(pdf_file)
-    st.write("PDF content extracted!")
-    st.write(text)
+    st.write("PDF content extracted...previewing first 100 characters")
+    st.write(text[:100])
     
     # load data
+    if st.button('Generate engine: '):
     index = load_data()
+    
+    
+    st.header('Ask your data')
+    
+
     
 
     chat_engine = index.as_chat_engine(chat_mode="condense_question", verbose=True)
