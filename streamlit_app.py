@@ -19,7 +19,7 @@ def get_pdf_text(pdf_file):
 #@st.cache_resource(show_spinner = False)
 def load_data(text):
     with st.spinner(text = "Loading and indexing docs"):
-        documents = documents = [Document(text=text)]
+        documents = [Document(text=text)]
         service_context = ServiceContext.from_defaults(llm = OpenAI(
                                                             model = "gpt-3.5-turbo",
                                                             temperature = .5,
@@ -35,8 +35,14 @@ if pdf_file is not None:
     st.write("Uploaded Filename: ", pdf_file.name)
     
     text = get_pdf_text(pdf_file)
-    st.write("PDF content extracted...previewing first 100 characters :sunglasses:")
+    st.write("*PDF content extracted*...")
     st.write(text[:100])
+    
+    # initialize session
+    if "messages" not in st.session_state.keys(): # Initialize the chat message history
+        st.session_state.messages = [
+        {"role": "assistant", "content": "Ask me a question!"}
+        ]    
     
     # load data
     if st.button('Load data: ', type = "primary"):
