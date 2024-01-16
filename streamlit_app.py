@@ -53,35 +53,28 @@ def chat(index):
                 message = {"role": "assistant", "content": response.response}
                 st.session_state.messages.append(message) # Add response to message history 
 
-def main():
-    
-    index = None
-    
-    # upload pdf file
-    pdf_file = st.file_uploader('Choose your .pdf file', type="pdf")
 
-    # initialize session
-    if "messages" not in st.session_state.keys(): # Initialize the chat message history
-        st.session_state.messages = [
-        {"role": "assistant", "content": "Ask me a question about your pdf!"}
-        ]    
-            
-    if pdf_file is not None:
-        st.write("Uploaded Filename: ", pdf_file.name)
     
-        text = get_pdf_text(pdf_file) # extract text from pdf
-        st.write("*PDF content extracted*...")
-        st.write(text[:100])
+# upload pdf file
+pdf_file = st.file_uploader('Choose your .pdf file', type="pdf")
+
+# initialize session
+if "messages" not in st.session_state.keys(): # Initialize the chat message history
+    st.session_state.messages = [
+    {"role": "assistant", "content": "Ask me a question about your pdf!"}
+    ]    
+            
+if pdf_file is not None:
+    st.write("Uploaded Filename: ", pdf_file.name)
     
-
+    text = get_pdf_text(pdf_file) # extract text from pdf
+    st.write("*PDF content extracted*...")
+    st.write(text[:100])
+    
+    index = load_data(text=text)
             
-        index = load_data(text=text)
-            
-        try:
-            index = load_data(text = text)
-            chat(index)
-        except:
-            st.warning("Uh oh! Something went wrong!")
-
-if __name__ == "main__":
-    main()
+    try:
+        index = load_data(text = text)
+        chat(index)
+    except:
+        st.warning("Uh oh! Something went wrong!")
