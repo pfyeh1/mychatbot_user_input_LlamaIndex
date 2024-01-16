@@ -16,8 +16,10 @@ def get_pdf_text(pdf_file):
         text += page.extract_text()
     return text
 
-#@st.cache_resource(show_spinner = False)
 def load_data(text):
+    """
+    create VectoreStoreIndex from list of text
+    """
     with st.spinner(text = "Loading and indexing docs"):
         documents = [Document(text=text)]
         service_context = ServiceContext.from_defaults(llm = OpenAI(
@@ -28,44 +30,55 @@ def load_data(text):
         index = VectorStoreIndex.from_documents(documents, service_context = service_context)
         return index
 
-# upload pdf file
-pdf_file = st.file_uploader('Choose your .pdf file', type="pdf")
+def chat(index):
+    """
+    Chat with your document that's in VectorStoreIndex
+    """
 
-if pdf_file is not None:
-    st.write("Uploaded Filename: ", pdf_file.name)
-    
-    text = get_pdf_text(pdf_file)
-    st.write("*PDF content extracted*...")
-    st.write(text[:100])
-    
-    # initialize session
-    if "messages" not in st.session_state.keys(): # Initialize the chat message history
-        st.session_state.messages = [
-        {"role": "assistant", "content": "Ask me a question!"}
-        ]    
-    
-    # load data
-    if st.button('Load data', type = "primary"):
-        index = load_data(text=text)
-    
-        st.header('Ask your data')
+    chat_engine = index.as_chat_engine(chat_mode="condense_question", verbose=True)
 
-        chat_engine = index.as_chat_engine(chat_mode="condense_question", verbose=True)
-    
-        if prompt := st.chat_input("Your question"): # Prompt for user input and save to chat history
-            st.session_state.messages.append({"role": "user", "content": prompt})
+    if prompt := st.chat_input("Your question"): # Prompt for user input and save to chat history
+        st.session_state.messages.append({"role": "user", "content": prompt})
 
-        for message in st.session_state.messages: # Display the prior chat messages
-            with st.chat_message(message["role"]):
-                st.write(message["content"])
+    for message in st.session_state.messages: # Display the prior chat messages
+        with st.chat_message(message["role"]):
+            st.write(message["content"])
         
-        # if last message is not from assistant, generate a new response
-        if st.session_state.messages[-1]["role"] != "assistant":
-            with st.chat_message("assistant"):
-                with st.spinner("Tinkin..."):
-                    response = chat_engine.chat(prompt)
-                    st.write(response.response)
-                    message = {"role": "assistant", "content": response.response}
-                    st.session_state.messages.append(message) # Add response to message history 
+    # if last message is not from assistant, generate a new response
+    if st.session_state.messages[-1]["role"] != "assistant":
+        with st.chat_message("assistant"):
+            with st.spinner("Tinkin..."):
+                response = chat_engine.chat(prompt)
+                st.write(response.response)
+                message = {"role": "assistant", "content": response.response}
+                st.session_state.messages.append(message) # Add response to message history 
 
-   
+def main():
+    
+    # upload pdf file
+    pdf_file = st.file_uploader('Choose your .pdf file', type="pdf")
+
+
+    if pdf_file is not None:
+        st.write("Uploaded Filename: ", pdf_file.name)
+    
+        text = get_pdf_text(pdf_file) # extract text from pdf
+        st.write("*PDF content extracted*...")
+        st.write(text[:100])
+    
+        # initialize session
+        if "messages" not in st.session_state.keys(): # Initialize the chat message history
+            st.session_state.messages = [
+            {"role": "assistant", "content": "Ask me a question!"}
+            ]    
+            
+            index = load_data(text=text)
+            
+            try:
+                index = load_data(text = text)
+                chat(index)
+            except:
+                st.warning("Uh oh! Something went wrong!")
+
+if __name__ == "main__":
+    main()
