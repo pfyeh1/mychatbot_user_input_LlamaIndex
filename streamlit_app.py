@@ -45,7 +45,7 @@ if pdf_file is not None:
         ]    
     
     # load data
-    if st.button('Load data: ', type = "primary"):
+    if st.button('Load data', type = "primary"):
         index = load_data(text=text)
     
         st.header('Ask your data')
