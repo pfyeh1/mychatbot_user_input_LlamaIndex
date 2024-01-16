@@ -56,6 +56,7 @@ def chat(index):
 # upload pdf file
 pdf_file = st.file_uploader('Choose your .pdf file', type="pdf")
 
+
 # initialize session
 if "messages" not in st.session_state.keys(): # Initialize the chat message history
     st.session_state.messages = [
