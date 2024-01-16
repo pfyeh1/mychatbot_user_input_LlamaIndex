@@ -19,13 +19,13 @@ def get_pdf_text(pdf_file):
 #@st.cache_resource(show_spinner = False)
 def load_data(text):
     with st.spinner(text = "Loading and indexing docs"):
-        documents = Document(text = text)
+        documents = documents = [Document(text=text)]
         service_context = ServiceContext.from_defaults(llm = OpenAI(
                                                             model = "gpt-3.5-turbo",
                                                             temperature = .5,
                                                             system_prompt = 
                                                            "Your job is to answer questions on the relate to the documents. Keep your answers technical, based on facts, and explain your reasoning."))
-        index = VectorStoreIndex.from_documents(documents, service_context =                         service_context)
+        index = VectorStoreIndex.from_documents(documents, service_context = service_context)
         return index
 
 # upload pdf file
@@ -35,12 +35,12 @@ if pdf_file is not None:
     st.write("Uploaded Filename: ", pdf_file.name)
     
     text = get_pdf_text(pdf_file)
-    st.write("PDF content extracted...previewing first 100 characters")
+    st.write("PDF content extracted...previewing first 100 characters :sunglasses:")
     st.write(text[:100])
     
     # load data
     if st.button('Load data: ', type = "primary"):
-        index = load_data(text)
+        index = load_data(text=text)
     
         st.header('Ask your data')
 
