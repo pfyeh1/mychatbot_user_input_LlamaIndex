@@ -28,7 +28,7 @@ def load_data(text):
         index = VectorStoreIndex.from_documents(documents, service_context =                         service_context)
         return index
 
-
+# upload pdf file
 pdf_file = st.file_uploader('Choose your .pdf file', type="pdf")
 
 if pdf_file is not None:
@@ -57,9 +57,9 @@ if pdf_file is not None:
         if st.session_state.messages[-1]["role"] != "assistant":
             with st.chat_message("assistant"):
                 with st.spinner("Tinkin..."):
-                response = chat_engine.chat(prompt)
-                st.write(response.response)
-                message = {"role": "assistant", "content": response.response}
-                st.session_state.messages.append(message) # Add response to message history 
+                    response = chat_engine.chat(prompt)
+                    st.write(response.response)
+                    message = {"role": "assistant", "content": response.response}
+                    st.session_state.messages.append(message) # Add response to message history 
 
    
