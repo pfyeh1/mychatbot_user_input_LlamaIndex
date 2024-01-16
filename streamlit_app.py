@@ -16,7 +16,7 @@ def get_pdf_text(pdf_file):
         text += page.extract_text()
     return text
 
-@st.cache_resource(show_spinner = False)
+#@st.cache_resource(show_spinner = False)
 def load_data(text):
     with st.spinner(text = "Loading and indexing docs"):
         documents = Document(text = text)
@@ -39,14 +39,10 @@ if pdf_file is not None:
     st.write(text[:100])
     
     # load data
-    if st.button('Generate engine: '):
-    index = load_data()
-    
+    if st.button('Load data: '):
+        index = load_data()
     
     st.header('Ask your data')
-    
-
-    
 
     chat_engine = index.as_chat_engine(chat_mode="condense_question", verbose=True)
     
@@ -56,7 +52,6 @@ if pdf_file is not None:
     for message in st.session_state.messages: # Display the prior chat messages
         with st.chat_message(message["role"]):
             st.write(message["content"])
-        
         
     # if last message is not from assistant, generate a new response
     if st.session_state.messages[-1]["role"] != "assistant":
