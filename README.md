@@ -13,4 +13,3 @@ My sandbox for learning how to build Generative AI apps using Streamlit based on
 
 - https://blog.streamlit.io/build-a-chatbot-with-custom-data-sources-powered-by-llamaindex/
 - https://levelup.gitconnected.com/python-streamlit-uploading-and-using-files-cf797dc30be3
-- Resource 3
